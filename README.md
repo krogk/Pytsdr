@@ -56,6 +56,11 @@ Learn about digital communication schemes.
 [x] BPSK
 <br />
 [x] QPSK
+<br />
+[] Cordic Algorithm
+<br />
+[] Costas Loop
+<br />
 
 <!-- Getting Started -->
 ## Getting Started
@@ -91,7 +96,10 @@ If you wish to download individual modules:
 <!-- Usage -->
 ### Usage
 
-see file
+Run demo.py pecifing only one modulation scheme:
+  ```sh
+  python ./demo.py --QPSK
+  ```
 
 <!-- Contributing -->
 ## Contributing
