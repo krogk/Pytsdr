@@ -96,7 +96,7 @@ If you wish to download individual modules:
 <!-- Usage -->
 ### Usage
 
-Run demo.py pecifing only one modulation scheme:
+Run demo.py specifing only one modulation scheme:
   ```sh
   python ./demo.py --QPSK
   ```
