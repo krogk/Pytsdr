@@ -62,12 +62,25 @@ Learn about digital communication schemes.
 
 ### Prerequisites
 
-Ubuntu Packages 
+[Anaconda](https://www.anaconda.com/) enviroment is recommended, it contains all necessary libraries.
+<br />
+If you wish to download individual modules:
+
 * numpy
   ```sh
-  sudo apt-get install cmake
+  pip install numpy
   ```
-
+  
+* scipy
+  ```sh
+  pip install scipy
+  ```
+  
+* matplotlib
+  ```sh
+  pip install matplotlib
+  ```
+  
 ### Installation
 
 1. Clone the repository
