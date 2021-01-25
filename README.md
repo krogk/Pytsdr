@@ -122,7 +122,7 @@ Distributed under the GPL-3.0 License. See `LICENSE` for more information.
 
 ## Acknowledgements
 
-Huge thank you to Dr. David Hutchings [dchutchings](https://github.com/dchutchings) of University of Glasgow for his teaching that this project is based on. 
+Huge thank you to Professor David Hutchings [dchutchings](https://github.com/dchutchings) of University of Glasgow for his teaching that this project is based on. 
 
 <!-- AgroPi Wiki -->
 ## Wiki
