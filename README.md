@@ -29,6 +29,7 @@
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgements">Acknowledgements</a></li>
     <li><a href="#wiki">Wiki</a></li>
   </ol>
 </details>
@@ -96,7 +97,7 @@ If you wish to download individual modules:
 <!-- Usage -->
 ### Usage
 
-Run demo.py pecifing only one modulation scheme:
+Run demo.py specifing only one modulation scheme:
   ```sh
   python ./demo.py --QPSK
   ```
@@ -119,7 +120,9 @@ Distributed under the GPL-3.0 License. See `LICENSE` for more information.
 
 [Kamil Rog](https://github.com/krogk)
 
+## Acknowledgements
 
+Huge thank you to Professor David Hutchings [dchutchings](https://github.com/dchutchings) of University of Glasgow for his teaching that this project is based on. 
 
 <!-- AgroPi Wiki -->
 ## Wiki
