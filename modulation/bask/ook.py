@@ -14,6 +14,7 @@ Modulate a signal using Binary Amplitude Shift keying scheme
 Inputs:
     data:       Array of binary data to be modulated
     bitPeriod:  Number of samples to be used for each bit representation
+    fc:         Normalised Carrier Frequency 
     
 Outputs:
     txModulated: Array containing modulated signal  
@@ -29,7 +30,7 @@ def ModulationBASK(data, bitPeriod, fc):
         # For each sample in bit representation
         for j in range(bitPeriod):
             # Compute Amplitude
-            txModulated = np.append(txModulated, data[i]*np.cos(2*np.pi*fc*t)) # m[i]*np.cos(2*np.pi*fc*(i*bitPeriod+j))
+            txModulated = np.append(txModulated, data[i]*np.cos(2*np.pi*fc*t))
             # Increment Sample Counter
             t += 1
             
@@ -40,9 +41,11 @@ def ModulationBASK(data, bitPeriod, fc):
 Demodulate a signal using Binary Amplitude Shift keying scheme,
 This essentially simulates a envelope detector( diode followed by low-pass filter)
 Inputs:
-    data:    Array of modulated data to be demodulated
-    bitLen:  Number of samples to be used for each bit representation
-    filt:    Filter to be used 
+    txModulated:    Array of modulated data to be demodulated
+    nBits:          Number of bits expected to Rx
+    bitPeriod:      Number of samples to be used for each bit representation
+    filt:           FIR Filter coefficients to be used 
+    nTaps:          Number of FIR filter taps
     
 Outputs:
     rxFiltered: Array containing demodulated and filtered signal   
@@ -50,7 +53,7 @@ Outputs:
 
 """
 def DemodulationBASK(txModulated, nBits, bitPeriod, b1Filt, nTaps):
-    # Rectify the signal
+    # Rectify(half-wave) the signal
     rxRecified = txModulated * np.heaviside(txModulated,0)
     # Low Pass Filtering
     rxFiltered = signal.lfilter(b1Filt,1,rxRecified)
@@ -63,7 +66,7 @@ def DemodulationBASK(txModulated, nBits, bitPeriod, b1Filt, nTaps):
     for i in range(0,nBits):
         # Move to the middle of the bit period
         t = (2*i+1) * bitPeriod//2 + nTaps//2
-        # Decode bit 
+        # Decode bit using thershold
         rxBin = np.append(rxBin, rxFiltered[t] > 0.1)
     
     return rxFiltered, rxBin

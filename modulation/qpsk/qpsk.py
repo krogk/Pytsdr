@@ -100,9 +100,6 @@ def DemodulationQPSK(txModulated, fc, nBits, bitPeriod, b1Filt, nTaps):
         # Decode I and then Q bit
         rxBin = np.append(rxBin, iFiltered[t] > 0.0)
         rxBin = np.append(rxBin, qFiltered[t] > 0.0)
-
-        
-        #rx_bin[i] = np.heaviside(rx_lpf[i], 0) Might want to switch to this 
     
     return iFiltered, qFiltered, rxBin
     

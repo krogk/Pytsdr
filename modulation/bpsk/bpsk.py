@@ -30,7 +30,7 @@ def ModulationBPSK(data, bitPeriod, fc):
         # For each sample in bit representation
         for j in range(bitPeriod):
             # Compute Amplitude
-            txModulated = np.append(txModulated, (2*data[i]-1)*np.cos(2*np.pi*fc*t)) # m[i]*np.cos(2*np.pi*fc*(i*bitPeriod+j))
+            txModulated = np.append(txModulated, (2*data[i]-1)*np.cos(2*np.pi*fc*t))
             # Increment Sample Counter
             t += 1
             
