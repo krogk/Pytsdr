@@ -123,10 +123,10 @@ if __name__ == "__main__":
             
     if (args.QPSK == True):
         print("USING QPSK SCHEME!")
-        txQPSK = qpsk.ModulationQPSK(txBin, bitPeriod*2, fc)
+        txQPSK = qpsk.ModulationQPSK(txBin, bitPeriod, fc)
         PlotTimeDomain(txQPSK,"Quadrature Phase Shift Keying - Tx Waveform")
         PlotFrequencySpectrum(txQPSK, "Quadrature Phase Shift Keying - Frequency Spectrum")
-        iRxQPSK, qRxQPSK, rxBin = qpsk.DemodulationQPSK(txQPSK, fc, nBits, bitPeriod*2, b1, nTaps)
+        iRxQPSK, qRxQPSK, rxBin = qpsk.DemodulationQPSK(txQPSK, fc, nBits, bitPeriod, b1, nTaps)
         PlotTimeDomain(iRxQPSK, "Quadrature Phase Shift Keying - Rx Waveform - I")
         PlotTimeDomain(qRxQPSK, "Quadrature Phase Shift Keying - Rx Waveform - Q")
         print ("Rx Data:")

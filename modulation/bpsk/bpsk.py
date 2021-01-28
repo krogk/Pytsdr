@@ -43,9 +43,11 @@ cosine( 2pi * sample number * carrier freq)
 Inputs:
     txModulated:   Array of modulated data to be demodulated
     fc:            Normalised Carrier Frequency
+    nBits:         Number of bits expected to Rx
     bitPeriod:     Number of samples to be used for each bit representation
-    b1Filt:        FIR Filter coefficients to be used in filtering stage
-    nTaps:         Number of taps FIR filter contain. 
+    b1Filt         FIR Filter coefficients to be used 
+    nTaps:         Number of FIR filter taps
+    
     
 Outputs:
     rxFiltered: Array containing demodulated and filtered signal   
@@ -63,10 +65,11 @@ def DemodulationBPSK(txModulated, fc, nBits, bitPeriod, b1Filt, nTaps):
             rxDemodulated = np.append(rxDemodulated, txModulated[t] * np.cos(2*np.pi*fc*t))
             t += 1
     
+    # Add pading to account for FIR delay to obtain correct bit stream
+    rxDemodulated = np.append(rxDemodulated, -np.ones(nTaps//2))
     # Low Pass Filtering
     rxFiltered = signal.lfilter(b1Filt,1,rxDemodulated)
-    # Add pading to account for FIR delay to obtain correct bit stream
-    rxFiltered = np.append(rxFiltered, -np.ones(nTaps//2))
+
     
     # Decode demodulated signal into bits
     rxBin = np.empty(0)
@@ -75,7 +78,6 @@ def DemodulationBPSK(txModulated, fc, nBits, bitPeriod, b1Filt, nTaps):
         # Move to the middle of the bit period
         t = (2*i+1) * bitPeriod//2 + nTaps//2
         # Decode bit 
-        rxBin = np.append(rxBin, rxFiltered[t] > 0.0)
-        #rx_bin[i] = np.heaviside(rx_lpf[i], 0)
+        rxBin = np.append(rxBin, rxFiltered[t] > 0.0)    
     
     return rxFiltered, rxBin

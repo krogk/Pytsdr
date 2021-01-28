@@ -55,10 +55,11 @@ Outputs:
 def DemodulationBASK(txModulated, nBits, bitPeriod, b1Filt, nTaps):
     # Rectify(half-wave) the signal
     rxRecified = txModulated * np.heaviside(txModulated,0)
+    # Add pading to account for FIR delay to obtain correct bit stream
+    rxRecified = np.append(rxRecified, np.empty(nTaps//2))
     # Low Pass Filtering
     rxFiltered = signal.lfilter(b1Filt,1,rxRecified)
-    # Add pading to account for FIR delay to obtain correct bit stream
-    rxFiltered = np.append(rxFiltered, np.empty(nTaps//2))
+
     
     # Decode demodulated signal into bits
     rxBin = np.empty(0)
