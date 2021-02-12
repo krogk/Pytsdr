@@ -15,6 +15,12 @@ from modulation.bask import ook
 from modulation.bpsk import bpsk
 from modulation.qpsk import qpsk
 
+from carrierrecovery import cordic
+from carrierrecovery import costas
+
+from coding import differential
+
+
 import numpy as np 
 from matplotlib import pyplot as plt
 from scipy import fft
@@ -60,6 +66,8 @@ if __name__ == "__main__":
     parser.add_argument('--BASK', default=False, action='store_true')
     parser.add_argument('--BPSK', default=False, action='store_true')
     parser.add_argument('--QPSK', default=False, action='store_true')
+    parser.add_argument('--CORDIC', default=False, action='store_true')
+    parser.add_argument('--COSTASBPSK', default=False, action='store_true')
     #parser.add_argument('--debug', default=False, action='store_true')
     # Create a namespace for the optional arguments
     args = parser.parse_args()
@@ -86,12 +94,12 @@ if __name__ == "__main__":
     mixed = np.zeros(nTaps)
     w1, h1 = signal.freqz(b1)
     
-    # Plot FIR filter frequency response
-    plt.title("Digital filter frequency response")
-    plt.plot(w1/2/np.pi, 20*np.log10(np.abs(h1)))
-    plt.ylabel("Amplitude Response/dB")
-    plt.xlabel("Frequency/Sample Rate")
-    plt.grid()
+    # # Plot FIR filter frequency response
+    # plt.title("Digital filter frequency response")
+    # plt.plot(w1/2/np.pi, 20*np.log10(np.abs(h1)))
+    # plt.ylabel("Amplitude Response/dB")
+    # plt.xlabel("Frequency/Sample Rate")
+    # plt.grid()
 
     
     # Notes: Rx Data has been padded by (number of taps/2) to flush the filter
@@ -132,8 +140,112 @@ if __name__ == "__main__":
         print ("Rx Data:")
         print(rxBin)
         
-    plt.show()
-    for i in range(len(binTestVector)):
-        if(binTestVector[i] != rxBin[i] ):
-            print("Error Detected at: " + str(i) )
+        
+    if (args.CORDIC == True):
+        print("CORDIC ALGORITHM DEMO!")
+        
+
+        
+        fc = 1/32
+        bitPeriod = 128
+        # FIR Filter Design
+        nTaps = 128
+        cuttOffFrequency = 0.005
+        b1 = signal.firwin(nTaps, cuttOffFrequency)
+        mixed = np.zeros(nTaps)
+        w1, h1 = signal.freqz(b1)
+        mixed = np.zeros(nTaps)
+        # Create discrete convolution filter by reversing FIR coefficients
+        b1 = np.flip(b1)
+        
+        # Run Cordic Algorithm
+        vout, cout, rout, quadrature = cordic.CordicAlgorithm(fc, bitPeriod, b1)
+
+        # plt.figure()
+        # plt.plot(vout, color = 'b')
+        # plt.show()
+        
+        plt.figure()
+        plt.plot(cout, color = 'b')
+        plt.plot(quadrature, color = 'r')
+        plt.show()
+        
+        # plt.figure()
+        # plt.plot(cout, color = 'b')
+        # plt.plot(rout, color = 'r')
+        # plt.show()
+        
+        
+    if (args.COSTASBPSK == True):
+        print("USING COSTAS LOOP TO DEMODULATE BPSK SCHEME!") 
+        
+        preludeNBits = 16
+        # Add random binary data to ensure time for clock to lock before data bits
+        prelude = np.array(np.random.randint(2, size=preludeNBits), dtype="bool")
+        txBin = np.append(prelude,txBin)
+       
+        fc = 1/32
+        bitPeriod = 128
+        # FIR Filter Design
+        nTaps = 128
+        cuttOffFrequency = 0.005
+        b1 = signal.firwin(nTaps, cuttOffFrequency)
+        mixed = np.zeros(nTaps)
+        w1, h1 = signal.freqz(b1)
+        mixed = np.zeros(nTaps)
+        # Create discrete convolution filter by reversing FIR coefficients
+        b1 = np.flip(b1)
+        
+        # Differnetial Encoding
+        nBits = 24+1 # Add differential encoding bit 
+        difEncoded = differential.DifferentialEncoder(txBin)
+        
+        # Modulate Signal using BPSK scheme
+        txBPSK = bpsk.ModulationBPSK(difEncoded, bitPeriod, fc)
+        
+        vout, cout, rout, dout0 = costas.CostasLoopBPSK(txBPSK, fc, bitPeriod, prelude.size, nBits, b1)
+        
+        # Run Heaviside function to detect bits in the waveform
+        rxBin = np.uint8([np.heaviside(dout0[(2*i+1)*bitPeriod//2+nTaps//2],0) for i in range(prelude.size+nBits)])
+    
+        # Differential Decoding
+        rxBin = differential.DifferentialDecoder(rxBin)
+        
+        # Splice array to contain only data i.e cut off prelude data
+        rxBin = rxBin[preludeNBits:]
+        print("Decoded data:")
+        print(rxBin)
+         
+        
+        lockFlag = True
+        for i in range(len(binTestVector)):
+            if(binTestVector[i] != rxBin[i] ):
+                print("Bit Error Detected at: " + str(i) )
+                # If there is a bit error it means the oscilator has not locked to the signal
+                lockFlag = False
+        
+        if(lockFlag):
+            print("VCO Sucesfully locked to a signal!" )
+        else:
+            print("VCO Not locked to signal!" )
+        
+        plt.figure()
+        plt.plot(vout, color = 'b')
+        plt.show()
+        
+        plt.figure()
+        plt.plot(cout, color = 'b')
+        plt.plot(rout, color = 'r')
+        plt.show()
+        
+        plt.figure()
+        plt.plot(dout0, color = 'b')
+        plt.show()
+        
+
+        
+    # plt.show()
+    # for i in range(len(binTestVector)):
+    #     if(binTestVector[i] != rxBin[i] ):
+    #         print("Bit Error Detected at: " + str(i) )
     

@@ -38,7 +38,7 @@ def ModulationBPSK(data, bitPeriod, fc):
 
 """
 Demodulate a signal using Binary phase Shift keying scheme,
-This essentially a mixer, multiplying the Rx Signal with a discrete carrier
+This essentially simulates a mixer, multiplying the Rx Signal with a discrete carrier
 cosine( 2pi * sample number * carrier freq) 
 Inputs:
     txModulated:   Array of modulated data to be demodulated
