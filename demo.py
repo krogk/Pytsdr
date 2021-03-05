@@ -144,8 +144,6 @@ if __name__ == "__main__":
     if (args.CORDIC == True):
         print("CORDIC ALGORITHM DEMO!")
         
-
-        
         fc = 1/32
         bitPeriod = 128
         # FIR Filter Design
