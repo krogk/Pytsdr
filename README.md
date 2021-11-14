@@ -29,8 +29,6 @@
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgements">Acknowledgements</a></li>
-    <li><a href="#wiki">Wiki</a></li>
   </ol>
 </details>
 
@@ -58,9 +56,9 @@ Learn about digital communication schemes.
 <br />
 [x] QPSK
 <br />
-[] Cordic Algorithm
+[x] Cordic Algorithm
 <br />
-[] Costas Loop
+[x] Costas Loop
 <br />
 
 <!-- Getting Started -->
@@ -102,13 +100,6 @@ Run demo.py specifing only one modulation scheme:
   python ./demo.py --QPSK
   ```
 
-<!-- Contributing -->
-## Contributing
-
-1. Fork this repo
-<br />
-
-
 <!-- License -->
 ## License
 
@@ -119,12 +110,3 @@ Distributed under the GPL-3.0 License. See `LICENSE` for more information.
 ## Contact
 
 [Kamil Rog](https://github.com/krogk)
-
-## Acknowledgements
-
-Huge thank you to Professor David Hutchings [dchutchings](https://github.com/dchutchings) of University of Glasgow for his teaching that this project is based on. 
-
-<!-- AgroPi Wiki -->
-## Wiki
-
-[Wiki]()
